@@ -34,7 +34,7 @@ public class FileController {
     @PostMapping()
     public ResponseEntity<FileResponse> uploadVideo(@RequestParam String title, @RequestParam MultipartFile file) throws IOException {
         try {
-            return new ResponseEntity<>(fileService.addVideo(title, file), HttpStatus.OK);
+            return new ResponseEntity<>(fileService.saveVideo(file), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

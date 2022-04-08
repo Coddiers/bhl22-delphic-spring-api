@@ -7,8 +7,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.FileResponse;
@@ -22,14 +20,12 @@ import pl.edu.wat.repo.api.repositories.VideoRepository;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class VideoServiceImpl implements VideoService {
 
-    GridFsTemplate gridFsTemplate;
-    GridFsOperations operations;
     VideoRepository videoRepository;
     FileService fileService;
 
     @Override
-    public VideoResponse add(String title, MultipartFile file) throws IOException, EntityNotFoundException {
-        FileResponse fileResponse = fileService.addVideo(title, file);
+    public VideoResponse add(MultipartFile file) throws IOException, EntityNotFoundException {
+        FileResponse fileResponse = fileService.saveVideo(file);
         return VideoResponse.from(
                 videoRepository.save(
                         Video.builder()
@@ -64,9 +60,9 @@ public class VideoServiceImpl implements VideoService {
         video.setVerified(true);
         video.setFake(true);
         for (MultipartFile picture : pictures) {
-            video.getPicturesIds()
+            video.getResponsePictureFileIds()
                     .add(
-                            fileService.addPicture(video.getId(), picture)
+                            fileService.savePicture(picture)
                                     .getId());
         }
 

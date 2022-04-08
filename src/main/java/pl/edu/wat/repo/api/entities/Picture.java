@@ -23,9 +23,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @FieldNameConstants
-public class Video extends Entity {
+public class Picture extends Entity {
     @NonNull
-    String videoFileId;
+    String pictureFileId;
 
     @Builder.Default
     Boolean verified = false;

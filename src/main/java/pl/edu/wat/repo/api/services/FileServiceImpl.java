@@ -33,25 +33,8 @@ public class FileServiceImpl implements FileService {
     FileRepository fileRepository;
 
     @Override
-    public FileResponse addVideo(String title, MultipartFile file) throws IOException, EntityNotFoundException {
-        return addFile(title, MediaType.MULTIPART_FORM_DATA_VALUE, file);
-    }
-
-    @Override
-    public FileResponse addFile(String title, String type, MultipartFile file) throws IOException, EntityNotFoundException {
-        DBObject metaData = new BasicDBObject();
-        metaData.put("type", type);
-        metaData.put("title", title);
-        Object fileID = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), metaData);
-
-        return getFile(fileRepository.save(
-                File.builder()
-                        .title(title)
-                        .type("video")
-                        .size(file.getSize())
-                        .binaryId(fileID.toString())
-                        .build()));
-
+    public FileResponse saveVideo(MultipartFile file) throws IOException, EntityNotFoundException {
+        return saveFile(file.getName(), MediaType.MULTIPART_FORM_DATA_VALUE, file);
     }
 
     @Override
@@ -62,12 +45,28 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileResponse addPicture(String id, MultipartFile file) throws IOException, EntityNotFoundException {
-        return addFile(genTitle(id), MediaType.IMAGE_JPEG_VALUE, file);
+    public FileResponse savePicture(MultipartFile file) throws IOException, EntityNotFoundException {
+        return saveFile(file.getName(), MediaType.IMAGE_JPEG_VALUE, file);
     }
 
-    private static String genTitle(String id){
-        return "%s_%s".formatted(id,UUID.randomUUID().toString());
+    private FileResponse saveFile(String title, String type, MultipartFile file) throws IOException, EntityNotFoundException {
+        DBObject metaData = new BasicDBObject();
+        metaData.put("type", type);
+        metaData.put("title", title);
+        Object fileID = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), metaData);
+
+        return getFile(fileRepository.save(
+                File.builder()
+                        .title(title)
+                        .type(file.getContentType())
+                        .size(file.getSize())
+                        .binaryId(fileID.toString())
+                        .build()));
+
+    }
+
+    private static String genTitle(String id) {
+        return "%s_%s".formatted(id, UUID.randomUUID().toString());
     }
 
     private FileResponse getFile(File file) throws EntityNotFoundException, IOException {

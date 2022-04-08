@@ -6,11 +6,9 @@ import pl.edu.wat.repo.api.dtos.response.FileResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 
 public interface FileService {
-    FileResponse addVideo(String title, MultipartFile file) throws IOException, EntityNotFoundException;
-
-    FileResponse addFile(String title, String type, MultipartFile file) throws IOException, EntityNotFoundException;
+    FileResponse saveVideo(MultipartFile file) throws IOException, EntityNotFoundException;
 
     FileResponse getFile(String id) throws IllegalStateException, IOException, EntityNotFoundException;
 
-    FileResponse addPicture(String id, MultipartFile pictureFile) throws IOException, EntityNotFoundException;
+    FileResponse savePicture(MultipartFile pictureFile) throws IOException, EntityNotFoundException;
 }

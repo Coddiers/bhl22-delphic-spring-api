@@ -12,6 +12,7 @@ import pl.edu.wat.repo.api.entities.Video;
 public class VideoResponse {
 
     String id;
+    String videoFileId;
     Instant createDate;
     Boolean verified;
     Boolean fake;
@@ -20,10 +21,11 @@ public class VideoResponse {
     public static VideoResponse from(Video video) {
         return new VideoResponse(
                 video.getId(),
+                video.getVideoFileId(),
                 video.getCreateDate(),
                 video.getVerified(),
                 video.getFake(),
-                video.getPicturesIds()
+                video.getResponsePictureFileIds()
         );
     }
 }

@@ -1,6 +1,7 @@
 package pl.edu.wat.repo.api.entities;
 
 
+import com.mongodb.lang.NonNull;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,18 +23,20 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @FieldNameConstants
-public class Video extends Entity {
+public class Site extends Entity {
+
     @NonNull
-    String videoFileId;
+    String url;
 
     @Builder.Default
-    Boolean verified = false;
+    List<String> pictureIds = new ArrayList<>();
 
     @Builder.Default
-    Boolean fake = false;
+    List<String> videoIds = new ArrayList<>();
+
 
     @Builder.Default
-    List<String> responsePictureFileIds = new ArrayList<>();
+    List<String> textIds = new ArrayList<>();
 
     Instant verifiedDate;
 }

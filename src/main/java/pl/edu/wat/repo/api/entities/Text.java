@@ -2,8 +2,6 @@ package pl.edu.wat.repo.api.entities;
 
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,18 +21,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @FieldNameConstants
-public class Video extends Entity {
+public class Text extends Entity {
     @NonNull
-    String videoFileId;
+    String value;
 
     @Builder.Default
     Boolean verified = false;
 
     @Builder.Default
     Boolean fake = false;
-
-    @Builder.Default
-    List<String> responsePictureFileIds = new ArrayList<>();
 
     Instant verifiedDate;
 }
