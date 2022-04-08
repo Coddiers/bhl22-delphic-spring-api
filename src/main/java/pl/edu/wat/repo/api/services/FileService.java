@@ -11,4 +11,6 @@ public interface FileService {
     FileResponse addFile(String title, String type, MultipartFile file) throws IOException, EntityNotFoundException;
 
     FileResponse getFile(String id) throws IllegalStateException, IOException, EntityNotFoundException;
+
+    FileResponse addPicture(String id, MultipartFile pictureFile) throws IOException, EntityNotFoundException;
 }

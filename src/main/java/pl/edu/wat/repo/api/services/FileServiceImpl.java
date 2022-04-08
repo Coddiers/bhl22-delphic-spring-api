@@ -5,6 +5,7 @@ import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.FileResponse;
@@ -32,7 +34,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileResponse addVideo(String title, MultipartFile file) throws IOException, EntityNotFoundException {
-        return addFile(title, "video", file);
+        return addFile(title, MediaType.MULTIPART_FORM_DATA_VALUE, file);
     }
 
     @Override
@@ -57,6 +59,15 @@ public class FileServiceImpl implements FileService {
         File file = fileRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(File.class));
         return getFile(file);
+    }
+
+    @Override
+    public FileResponse addPicture(String id, MultipartFile file) throws IOException, EntityNotFoundException {
+        return addFile(genTitle(id), MediaType.IMAGE_JPEG_VALUE, file);
+    }
+
+    private static String genTitle(String id){
+        return "%s_%s".formatted(id,UUID.randomUUID().toString());
     }
 
     private FileResponse getFile(File file) throws EntityNotFoundException, IOException {
