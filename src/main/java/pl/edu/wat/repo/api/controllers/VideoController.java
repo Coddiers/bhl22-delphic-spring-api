@@ -62,7 +62,7 @@ public class VideoController {
             return ResponseEntity.ok(videoService.getAll());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("verified/{id}")
     public ResponseEntity<VideoResponse> getVerified(String id) {
         try {
             return ResponseEntity.ok(videoService.getVerified(id));

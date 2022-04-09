@@ -57,7 +57,7 @@ public class TextController {
         return ResponseEntity.ok(textService.getAll());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("verified/{id}")
     public ResponseEntity<TextResponse> getVerified(String id) {
         try {
             return ResponseEntity.ok(textService.getVerified(id));

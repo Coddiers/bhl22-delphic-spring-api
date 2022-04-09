@@ -64,7 +64,7 @@ public class PictureController {
         return ResponseEntity.ok(pictureService.getAll());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("verified/{id}")
     public ResponseEntity<PictureResponse> getVerified(String id) {
         try {
             return ResponseEntity.ok(pictureService.getVerified(id));
