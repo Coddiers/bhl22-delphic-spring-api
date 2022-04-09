@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.FileResponse;
@@ -35,7 +34,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileResponse saveFile(MultipartFile file) throws IOException, EntityNotFoundException {
-        return saveFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize());
+        return saveFile(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), file.getSize());
     }
 
     @Override
@@ -46,11 +45,12 @@ public class FileServiceImpl implements FileService {
     }
 
     public FileResponse savePicture(MultipartFile file) throws IOException, EntityNotFoundException {
-        return saveFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize());
+        return saveFile(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), file.getSize());
     }
 
     @Override
-    public FileResponse saveFile(InputStream inputStream, String originalFileName, String contentType, Long size) throws IOException, EntityNotFoundException {
+    public FileResponse saveFile(InputStream inputStream, String originalFileName, String contentType, Long size)
+            throws IOException, EntityNotFoundException {
         DBObject metaData = new BasicDBObject();
         metaData.put("type", contentType);
         metaData.put("title", originalFileName);

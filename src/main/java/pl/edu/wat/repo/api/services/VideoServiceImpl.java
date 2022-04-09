@@ -3,6 +3,7 @@ package pl.edu.wat.repo.api.services;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.FileResponse;
 import pl.edu.wat.repo.api.dtos.response.VideoResponse;
+import pl.edu.wat.repo.api.entities.Picture;
 import pl.edu.wat.repo.api.entities.Video;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 import pl.edu.wat.repo.api.repositories.VideoRepository;
@@ -74,6 +76,25 @@ public class VideoServiceImpl implements VideoService {
         return videoRepository.findById(id)
                 .map(VideoResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(Video.class));
+    }
+
+    @Override
+    public List<VideoResponse> getAll() {
+        return videoRepository.findAll()
+                .stream()
+                .map(VideoResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public VideoResponse getVerified(String id) throws EntityNotFoundException {
+        Video video = videoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        while (!video.getVerified()){
+            video = videoRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        }
+        return VideoResponse.from(video);
     }
 
 }

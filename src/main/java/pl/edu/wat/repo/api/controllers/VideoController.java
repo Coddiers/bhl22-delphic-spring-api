@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.dtos.response.VideoResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 import pl.edu.wat.repo.api.services.VideoService;
@@ -51,6 +52,20 @@ public class VideoController {
     public ResponseEntity<VideoResponse> get(@PathVariable String id) {
         try {
             return ResponseEntity.ok(videoService.get(id));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<VideoResponse>> getAll() {
+            return ResponseEntity.ok(videoService.getAll());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<VideoResponse> getVerified(String id) {
+        try {
+            return ResponseEntity.ok(videoService.getVerified(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

@@ -19,4 +19,8 @@ public interface PictureService {
     PictureResponse setAsFake(String id, List<MultipartFile> pictures) throws EntityNotFoundException, IOException;
 
     PictureResponse get(String id) throws EntityNotFoundException;
+
+    List<PictureResponse> getAll();
+
+    PictureResponse getVerified(String id) throws EntityNotFoundException;
 }

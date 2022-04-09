@@ -1,6 +1,7 @@
 package pl.edu.wat.repo.api.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.dtos.response.TextResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 import pl.edu.wat.repo.api.services.TextService;
@@ -45,6 +47,20 @@ public class TextController {
     public ResponseEntity<TextResponse> get(@PathVariable String id) {
         try {
             return ResponseEntity.ok(textService.get(id));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<TextResponse>> getAll() {
+        return ResponseEntity.ok(textService.getAll());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<TextResponse> getVerified(String id) {
+        try {
+            return ResponseEntity.ok(textService.getVerified(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }

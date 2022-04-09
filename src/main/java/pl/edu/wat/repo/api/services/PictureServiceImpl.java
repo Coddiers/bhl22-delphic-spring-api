@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -65,20 +66,20 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     public PictureResponse setAsFake(String id, List<MultipartFile> pictures) throws EntityNotFoundException, IOException {
-        Picture video = pictureRepository.findById(id)
+        Picture pictureEntity = pictureRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Picture.class));
 
-        video.setVerifiedDate(Instant.now());
-        video.setVerified(true);
-        video.setFake(true);
+        pictureEntity.setVerifiedDate(Instant.now());
+        pictureEntity.setVerified(true);
+        pictureEntity.setFake(true);
         for (MultipartFile picture : pictures) {
-            video.getResponsePictureFileIds()
+            pictureEntity.getResponsePictureFileIds()
                     .add(
                             fileService.saveFile(picture)
                                     .getId());
         }
 
-        return PictureResponse.from(pictureRepository.save(video));
+        return PictureResponse.from(pictureRepository.save(pictureEntity));
     }
 
     @Override
@@ -88,4 +89,22 @@ public class PictureServiceImpl implements PictureService {
                 .orElseThrow(() -> new EntityNotFoundException(Picture.class));
     }
 
+    @Override
+    public List<PictureResponse> getAll() {
+        return pictureRepository.findAll()
+                .stream()
+                .map(PictureResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public PictureResponse getVerified(String id) throws EntityNotFoundException {
+        Picture picture = pictureRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        while (!picture.getVerified()){
+            picture = pictureRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        }
+        return PictureResponse.from(picture);
+    }
 }

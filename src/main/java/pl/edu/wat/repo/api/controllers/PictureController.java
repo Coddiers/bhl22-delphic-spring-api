@@ -28,12 +28,12 @@ import pl.edu.wat.repo.api.services.PictureService;
 @RequestMapping("/api/picture")
 public class PictureController {
 
-    PictureService textService;
+    PictureService pictureService;
 
     @PostMapping()
     public ResponseEntity<PictureResponse> upload(@RequestBody MultipartFile file) {
         try {
-            return new ResponseEntity<>(textService.add(file), HttpStatus.CREATED);
+            return new ResponseEntity<>(pictureService.add(file), HttpStatus.CREATED);
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         } catch (EntityNotFoundException e) {
@@ -44,7 +44,7 @@ public class PictureController {
     @GetMapping("next")
     public ResponseEntity<PictureResponse> getNext() {
         try {
-            return ResponseEntity.ok(textService.getNextToVerify());
+            return ResponseEntity.ok(pictureService.getNextToVerify());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -53,7 +53,21 @@ public class PictureController {
     @GetMapping("{id}")
     public ResponseEntity<PictureResponse> get(@PathVariable String id) {
         try {
-            return ResponseEntity.ok(textService.get(id));
+            return ResponseEntity.ok(pictureService.get(id));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<PictureResponse>> getAll() {
+        return ResponseEntity.ok(pictureService.getAll());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<PictureResponse> getVerified(String id) {
+        try {
+            return ResponseEntity.ok(pictureService.getVerified(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -62,7 +76,7 @@ public class PictureController {
     @PostMapping("setAsReal/{id}")
     public ResponseEntity<PictureResponse> setAsReal(@PathVariable String id) {
         try {
-            return ResponseEntity.ok(textService.setAsReal(id));
+            return ResponseEntity.ok(pictureService.setAsReal(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -71,7 +85,7 @@ public class PictureController {
     @PostMapping("setAsFake/{id}")
     public ResponseEntity<PictureResponse> setAsFake(@PathVariable String id, @RequestParam MultipartFile file) {
         try {
-            return ResponseEntity.ok(textService.setAsFake(id, List.of(file)));
+            return ResponseEntity.ok(pictureService.setAsFake(id, List.of(file)));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (IOException e) {

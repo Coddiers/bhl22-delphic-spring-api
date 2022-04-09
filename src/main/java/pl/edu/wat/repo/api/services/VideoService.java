@@ -16,4 +16,8 @@ public interface VideoService {
     VideoResponse setAsFake(String id, List<MultipartFile> pictures) throws EntityNotFoundException, IOException;
 
     VideoResponse get(String id) throws EntityNotFoundException;
+
+    List<VideoResponse> getAll();
+
+    VideoResponse getVerified(String id) throws EntityNotFoundException;
 }

@@ -2,12 +2,16 @@ package pl.edu.wat.repo.api.services;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.dtos.response.TextResponse;
+import pl.edu.wat.repo.api.entities.Picture;
 import pl.edu.wat.repo.api.entities.Text;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 import pl.edu.wat.repo.api.repositories.TextRepository;
@@ -63,6 +67,25 @@ public class TextServiceImpl implements TextService {
         return textRepository.findById(id)
                 .map(TextResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(Text.class));
+    }
+
+    @Override
+    public List<TextResponse> getAll() {
+        return textRepository.findAll()
+                .stream()
+                .map(TextResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TextResponse getVerified(String id) throws EntityNotFoundException {
+        Text text = textRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        while (!text.getVerified()){
+            text = textRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        }
+        return TextResponse.from(text);
     }
 
 }
