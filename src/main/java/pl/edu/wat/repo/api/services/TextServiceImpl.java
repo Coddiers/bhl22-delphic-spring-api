@@ -1,6 +1,5 @@
 package pl.edu.wat.repo.api.services;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.dtos.response.TextResponse;
 import pl.edu.wat.repo.api.entities.Picture;
 import pl.edu.wat.repo.api.entities.Text;
@@ -81,7 +79,7 @@ public class TextServiceImpl implements TextService {
     public TextResponse getVerified(String id) throws EntityNotFoundException {
         Text text = textRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Picture.class));
-        while (!text.getVerified()){
+        while (!text.getVerified()) {
             text = textRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(Picture.class));
         }

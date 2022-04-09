@@ -12,11 +12,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 
@@ -52,14 +50,14 @@ public class WebScrapingServiceImpl implements WebScrapingService {
     }
 
     private String fixPathIfNoProtocol(String path) {
-        return path.replaceAll("^//","https://");
+        return path.replaceAll("^//", "https://");
     }
 
     private Optional<PictureResponse> downloadPicture(String url) {
         try (InputStream input = new URL(url).openStream()) {
-            return Optional.of(pictureService.add(input, url,99L));
+            return Optional.of(pictureService.add(input, url, 99L));
         } catch (IOException | EntityNotFoundException e) {
-            log.error("Error ",e);
+            log.error("Error ", e);
             return Optional.empty();
         }
     }

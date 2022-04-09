@@ -28,7 +28,7 @@ public class PictureServiceImpl implements PictureService {
 
     @Override
     public PictureResponse add(InputStream inputStream, String name, long size) throws IOException, EntityNotFoundException {
-        FileResponse fileResponse = fileService.saveFile(inputStream, name, MediaType.IMAGE_JPEG_VALUE , size);
+        FileResponse fileResponse = fileService.saveFile(inputStream, name, MediaType.IMAGE_JPEG_VALUE, size);
         return PictureResponse.from(
                 pictureRepository.save(
                         Picture.builder()
@@ -100,8 +100,8 @@ public class PictureServiceImpl implements PictureService {
     @Override
     public PictureResponse getVerified(String id) throws EntityNotFoundException {
         Picture picture = pictureRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException(Picture.class));
-        while (!picture.getVerified()){
+                .orElseThrow(() -> new EntityNotFoundException(Picture.class));
+        while (!picture.getVerified()) {
             picture = pictureRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(Picture.class));
         }

@@ -32,6 +32,10 @@ public class FileServiceImpl implements FileService {
     GridFsOperations operations;
     FileRepository fileRepository;
 
+    private static String genTitle(String id) {
+        return "%s_%s".formatted(id, UUID.randomUUID().toString());
+    }
+
     @Override
     public FileResponse saveFile(MultipartFile file) throws IOException, EntityNotFoundException {
         return saveFile(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), file.getSize());
@@ -64,10 +68,6 @@ public class FileServiceImpl implements FileService {
                         .binaryId(fileID.toString())
                         .build()));
 
-    }
-
-    private static String genTitle(String id) {
-        return "%s_%s".formatted(id, UUID.randomUUID().toString());
     }
 
     private FileResponse getFile(File file) throws EntityNotFoundException, IOException {

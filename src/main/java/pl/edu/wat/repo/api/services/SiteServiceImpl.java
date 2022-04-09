@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.edu.wat.repo.api.dtos.response.SiteResponse;
-import pl.edu.wat.repo.api.dtos.response.VideoResponse;
 import pl.edu.wat.repo.api.entities.Picture;
 import pl.edu.wat.repo.api.entities.Site;
 import pl.edu.wat.repo.api.entities.Text;
@@ -79,7 +78,7 @@ public class SiteServiceImpl implements SiteService {
         return isFakeText(site) || isFakeVideo(site) || isFakePicture(site);
     }
 
-    private Boolean isFakeText(Site site){
+    private Boolean isFakeText(Site site) {
         return site.getTextIds()
                 .stream()
                 .map(textRepository::findById)
@@ -87,7 +86,7 @@ public class SiteServiceImpl implements SiteService {
                 .anyMatch(it -> it.getVerified() && it.getFake());
     }
 
-    private Boolean isFakeVideo(Site site){
+    private Boolean isFakeVideo(Site site) {
         return site.getVideoIds()
                 .stream()
                 .map(videoRepository::findById)
@@ -95,7 +94,7 @@ public class SiteServiceImpl implements SiteService {
                 .anyMatch(it -> it.getVerified() && it.getFake());
     }
 
-    private Boolean isFakePicture(Site site){
+    private Boolean isFakePicture(Site site) {
         return site.getPictureIds()
                 .stream()
                 .map(pictureRepository::findById)

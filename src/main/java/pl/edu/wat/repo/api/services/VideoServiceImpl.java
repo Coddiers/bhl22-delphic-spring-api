@@ -90,7 +90,7 @@ public class VideoServiceImpl implements VideoService {
     public VideoResponse getVerified(String id) throws EntityNotFoundException {
         Video video = videoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Picture.class));
-        while (!video.getVerified()){
+        while (!video.getVerified()) {
             video = videoRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException(Picture.class));
         }

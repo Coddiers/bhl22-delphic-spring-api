@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import pl.edu.wat.repo.api.dtos.response.PictureResponse;
 import pl.edu.wat.repo.api.dtos.response.VideoResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
 import pl.edu.wat.repo.api.services.VideoService;
@@ -59,7 +58,7 @@ public class VideoController {
 
     @GetMapping("all")
     public ResponseEntity<List<VideoResponse>> getAll() {
-            return ResponseEntity.ok(videoService.getAll());
+        return ResponseEntity.ok(videoService.getAll());
     }
 
     @GetMapping("verified/{id}")

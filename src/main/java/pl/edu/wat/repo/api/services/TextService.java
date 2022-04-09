@@ -1,6 +1,5 @@
 package pl.edu.wat.repo.api.services;
 
-import java.io.IOException;
 import java.util.List;
 import pl.edu.wat.repo.api.dtos.response.TextResponse;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;

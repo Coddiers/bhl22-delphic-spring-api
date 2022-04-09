@@ -24,29 +24,24 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @FieldNameConstants
 public class User extends Entity {
-    public enum ERole {
-        ROLE_USER, ROLE_MODERATOR, ROLE_ADMIN
-    }
-
     @Indexed(unique = true)
     @NonNull
     String username;
-
     @Indexed(unique = true)
     @NonNull
     String email;
-
     @NonNull
     String password;
-
     @NonNull
     @Builder.Default
     Boolean isOrganization = false;
-
     @Builder.Default
     @NonNull
     Set<ERole> roles = new HashSet<>();
-
     @Nullable
     String description;
+
+    public enum ERole {
+        ROLE_USER, ROLE_MODERATOR, ROLE_ADMIN
+    }
 }
