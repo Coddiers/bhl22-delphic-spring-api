@@ -65,8 +65,6 @@ public class TextController {
             return ResponseEntity.ok(textService.setAsFake(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().build();
         }
     }
 }

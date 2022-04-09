@@ -1,12 +1,14 @@
 package pl.edu.wat.repo.api.services;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.FileResponse;
@@ -24,8 +26,18 @@ public class PictureServiceImpl implements PictureService {
     FileService fileService;
 
     @Override
+    public PictureResponse add(InputStream inputStream, String name, long size) throws IOException, EntityNotFoundException {
+        FileResponse fileResponse = fileService.saveFile(inputStream, name, MediaType.IMAGE_JPEG_VALUE , size);
+        return PictureResponse.from(
+                pictureRepository.save(
+                        Picture.builder()
+                                .pictureFileId(fileResponse.getId())
+                                .build()));
+    }
+
+    @Override
     public PictureResponse add(MultipartFile file) throws IOException, EntityNotFoundException {
-        FileResponse fileResponse = fileService.savePicture(file);
+        FileResponse fileResponse = fileService.saveFile(file);
         return PictureResponse.from(
                 pictureRepository.save(
                         Picture.builder()
@@ -62,7 +74,7 @@ public class PictureServiceImpl implements PictureService {
         for (MultipartFile picture : pictures) {
             video.getResponsePictureFileIds()
                     .add(
-                            fileService.savePicture(picture)
+                            fileService.saveFile(picture)
                                     .getId());
         }
 
@@ -75,6 +87,5 @@ public class PictureServiceImpl implements PictureService {
                 .map(PictureResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(Picture.class));
     }
-
 
 }

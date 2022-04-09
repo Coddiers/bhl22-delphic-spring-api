@@ -25,7 +25,7 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public VideoResponse add(MultipartFile file) throws IOException, EntityNotFoundException {
-        FileResponse fileResponse = fileService.saveVideo(file);
+        FileResponse fileResponse = fileService.saveFile(file);
         return VideoResponse.from(
                 videoRepository.save(
                         Video.builder()
@@ -62,7 +62,7 @@ public class VideoServiceImpl implements VideoService {
         for (MultipartFile picture : pictures) {
             video.getResponsePictureFileIds()
                     .add(
-                            fileService.savePicture(picture)
+                            fileService.saveFile(picture)
                                     .getId());
         }
 
@@ -75,6 +75,5 @@ public class VideoServiceImpl implements VideoService {
                 .map(VideoResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(Video.class));
     }
-
 
 }

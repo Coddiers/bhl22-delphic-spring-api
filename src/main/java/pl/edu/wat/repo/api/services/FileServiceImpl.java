@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -33,8 +34,8 @@ public class FileServiceImpl implements FileService {
     FileRepository fileRepository;
 
     @Override
-    public FileResponse saveVideo(MultipartFile file) throws IOException, EntityNotFoundException {
-        return saveFile(file.getName(), MediaType.MULTIPART_FORM_DATA_VALUE, file);
+    public FileResponse saveFile(MultipartFile file) throws IOException, EntityNotFoundException {
+        return saveFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize());
     }
 
     @Override
@@ -44,22 +45,22 @@ public class FileServiceImpl implements FileService {
         return getFile(file);
     }
 
-    @Override
     public FileResponse savePicture(MultipartFile file) throws IOException, EntityNotFoundException {
-        return saveFile(file.getName(), MediaType.IMAGE_JPEG_VALUE, file);
+        return saveFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize());
     }
 
-    private FileResponse saveFile(String title, String type, MultipartFile file) throws IOException, EntityNotFoundException {
+    @Override
+    public FileResponse saveFile(InputStream inputStream, String originalFileName, String contentType, Long size) throws IOException, EntityNotFoundException {
         DBObject metaData = new BasicDBObject();
-        metaData.put("type", type);
-        metaData.put("title", title);
-        Object fileID = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType(), metaData);
+        metaData.put("type", contentType);
+        metaData.put("title", originalFileName);
+        Object fileID = gridFsTemplate.store(inputStream, originalFileName, contentType, metaData);
 
         return getFile(fileRepository.save(
                 File.builder()
-                        .title(title)
-                        .type(file.getContentType())
-                        .size(file.getSize())
+                        .title(originalFileName)
+                        .type(contentType)
+                        .size(size)
                         .binaryId(fileID.toString())
                         .build()));
 

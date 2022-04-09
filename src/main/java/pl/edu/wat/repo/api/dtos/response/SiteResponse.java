@@ -16,13 +16,17 @@ public class SiteResponse {
     List<String> textIds;
     List<String> videoIds;
     List<String> pictureIds;
+    Boolean fake;
+    Boolean verified;
 
-    public static SiteResponse from(Site site) {
+    public static SiteResponse from(Site site, Boolean fake, Boolean verified) {
         return new SiteResponse(
                 site.getUrl(),
                 site.getTextIds(),
                 site.getVideoIds(),
-                site.getPictureIds()
+                site.getPictureIds(),
+                fake,
+                verified
         );
     }
 }
