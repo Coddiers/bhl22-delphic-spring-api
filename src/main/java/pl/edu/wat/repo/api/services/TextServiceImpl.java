@@ -47,7 +47,7 @@ public class TextServiceImpl implements TextService {
     }
 
     @Override
-    public TextResponse setAsFake(String id) throws EntityNotFoundException, IOException {
+    public TextResponse setAsFake(String id) throws EntityNotFoundException {
         Text video = textRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Text.class));
 
@@ -64,6 +64,5 @@ public class TextServiceImpl implements TextService {
                 .map(TextResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(Text.class));
     }
-
 
 }

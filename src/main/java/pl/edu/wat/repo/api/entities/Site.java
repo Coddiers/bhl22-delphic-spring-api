@@ -34,9 +34,6 @@ public class Site extends Entity {
     @Builder.Default
     List<String> videoIds = new ArrayList<>();
 
-
     @Builder.Default
     List<String> textIds = new ArrayList<>();
-
-    Instant verifiedDate;
 }

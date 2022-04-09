@@ -11,7 +11,7 @@ public interface TextService {
 
     TextResponse setAsReal(String id) throws EntityNotFoundException;
 
-    TextResponse setAsFake(String id) throws EntityNotFoundException, IOException;
+    TextResponse setAsFake(String id) throws EntityNotFoundException;
 
     TextResponse get(String id) throws EntityNotFoundException;
 }

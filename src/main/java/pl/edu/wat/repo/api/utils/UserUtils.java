@@ -18,7 +18,6 @@ public class UserUtils {
                 .anyMatch(it -> it == User.ERole.ROLE_MODERATOR);
     }
 
-
     public static boolean isAdmin(User user) {
         return user.getRoles()
                 .stream()

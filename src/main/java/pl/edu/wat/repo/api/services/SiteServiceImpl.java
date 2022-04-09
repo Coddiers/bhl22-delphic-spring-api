@@ -1,63 +1,107 @@
 package pl.edu.wat.repo.api.services;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import pl.edu.wat.repo.api.dtos.response.SiteResponse;
+import pl.edu.wat.repo.api.dtos.response.VideoResponse;
+import pl.edu.wat.repo.api.entities.Picture;
 import pl.edu.wat.repo.api.entities.Site;
+import pl.edu.wat.repo.api.entities.Text;
+import pl.edu.wat.repo.api.entities.Video;
 import pl.edu.wat.repo.api.exceptions.EntityNotFoundException;
+import pl.edu.wat.repo.api.repositories.PictureRepository;
+import pl.edu.wat.repo.api.repositories.SiteRepository;
+import pl.edu.wat.repo.api.repositories.TextRepository;
+import pl.edu.wat.repo.api.repositories.VideoRepository;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class SiteServiceImpl implements SiteService {
 
-    VideoService videoService;
-    PictureService pictureService;
-    TextService textService;
-    WebScrapingService webScrapingService;
+    WebScrapingServiceImpl webScrapingService;
+    SiteRepository siteRepository;
+    PictureRepository pictureRepository;
+    TextRepository textRepository;
+    VideoRepository videoRepository;
 
     @Override
     public SiteResponse add(String url) throws IOException, EntityNotFoundException {
-        return SiteResponse.from(Site.builder()
-                .url(url)
-                .textIds(getTextIds(url))
-                .pictureIds(getPictureIds(url))
-                .videoIds(getVideoIds(url))
-                .build());
+        return SiteResponse.from(siteRepository.save(Site.builder().url(url)
+//                .textIds(getTextIds(url))
+                .pictureIds(webScrapingService.extractPictures(url))
+//                .videoIds(getVideoIds(url))
+                .build()), false, false);
     }
 
-    private List<String> getVideoIds(String url) throws IOException, EntityNotFoundException {
-        List<MultipartFile> files = webScrapingService.extractVideos(url);
-        List<String> ids = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            ids.add(videoService.add(file).getId());
-        }
-        return ids;
+    @Override
+    public SiteResponse get(String id) throws EntityNotFoundException {
+        Site site = siteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Site.class));
+        return SiteResponse.from(site, isFakeSite(site), isVerified(site));
     }
 
-    private List<String> getPictureIds(String url) throws IOException, EntityNotFoundException {
-        List<MultipartFile> files = webScrapingService.extractPictures(url);
-        List<String> ids = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            ids.add(pictureService.add(file).getId());
-        }
-        return ids;
+    private Boolean isVerified(Site site) {
+        return isAllPicturesVerified(site) && isAllVideosVerified(site) && isAllTextsVerified(site);
     }
 
-    private List<String> getTextIds(String url) {
-        return webScrapingService.extractTexts(url)
+    private Boolean isAllTextsVerified(Site site) {
+        return site.getTextIds()
                 .stream()
-                .map(text -> textService.add(text).getId())
-                .collect(Collectors.toList());
+                .map(textRepository::findById)
+                .flatMap(Optional::stream)
+                .allMatch(Text::getVerified);
     }
+
+    private Boolean isAllVideosVerified(Site site) {
+        return site.getVideoIds()
+                .stream()
+                .map(videoRepository::findById)
+                .flatMap(Optional::stream)
+                .allMatch(Video::getVerified);
+    }
+
+    private boolean isAllPicturesVerified(Site site) {
+        return site.getPictureIds()
+                .stream()
+                .map(pictureRepository::findById)
+                .flatMap(Optional::stream)
+                .allMatch(Picture::getVerified);
+    }
+
+
+    private Boolean isFakeSite(Site site) {
+        return isFakeText(site) || isFakeVideo(site) || isFakePicture(site);
+    }
+
+    private Boolean isFakeText(Site site){
+        return site.getTextIds()
+                .stream()
+                .map(textRepository::findById)
+                .flatMap(Optional::stream)
+                .anyMatch(it -> it.getVerified() && it.getFake());
+    }
+
+    private Boolean isFakeVideo(Site site){
+        return site.getVideoIds()
+                .stream()
+                .map(videoRepository::findById)
+                .flatMap(Optional::stream)
+                .anyMatch(it -> it.getVerified() && it.getFake());
+    }
+
+    private Boolean isFakePicture(Site site){
+        return site.getPictureIds()
+                .stream()
+                .map(pictureRepository::findById)
+                .flatMap(Optional::stream)
+                .anyMatch(it -> it.getVerified() && it.getFake());
+    }
+
+
 }

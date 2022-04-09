@@ -17,7 +17,6 @@ public class UserResponse {
     Boolean isOrganization;
     List<String> roles;
 
-
     public static UserResponse from(User user) {
         return new UserResponse(
                 user.getId(),
