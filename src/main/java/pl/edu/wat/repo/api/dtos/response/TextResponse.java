@@ -14,6 +14,7 @@ public class TextResponse {
     String value;
     Instant createDate;
     Boolean verified;
+    Instant verifiedDate;
     Boolean fake;
 
     public static TextResponse from(Text text) {
@@ -22,6 +23,7 @@ public class TextResponse {
                 text.getValue(),
                 text.getCreateDate(),
                 text.getVerified(),
+                text.getVerifiedDate(),
                 text.getFake()
         );
     }

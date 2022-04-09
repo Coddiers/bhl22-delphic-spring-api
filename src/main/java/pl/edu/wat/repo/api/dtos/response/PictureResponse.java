@@ -15,6 +15,7 @@ public class PictureResponse {
     String pictureFileId;
     Instant createDate;
     Boolean verified;
+    Instant verifiedDate;
     Boolean fake;
     List<String> pictureIDs;
 
@@ -24,6 +25,7 @@ public class PictureResponse {
                 picture.getPictureFileId(),
                 picture.getCreateDate(),
                 picture.getVerified(),
+                picture.getVerifiedDate(),
                 picture.getFake(),
                 picture.getResponsePictureFileIds()
         );

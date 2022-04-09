@@ -30,7 +30,7 @@ public class VideoController {
     VideoService videoService;
 
     @PostMapping()
-    public ResponseEntity<VideoResponse> upload(@RequestParam String title, @RequestParam MultipartFile file) throws IOException {
+    public ResponseEntity<VideoResponse> upload(@RequestParam MultipartFile file) throws IOException {
         try {
             return new ResponseEntity<>(videoService.add(file), HttpStatus.OK);
         } catch (EntityNotFoundException e) {

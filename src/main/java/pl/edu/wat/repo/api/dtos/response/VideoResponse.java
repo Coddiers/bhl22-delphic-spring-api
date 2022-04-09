@@ -15,6 +15,7 @@ public class VideoResponse {
     String videoFileId;
     Instant createDate;
     Boolean verified;
+    Instant verifiedDate;
     Boolean fake;
     List<String> pictureIDs;
 
@@ -24,6 +25,7 @@ public class VideoResponse {
                 video.getVideoFileId(),
                 video.getCreateDate(),
                 video.getVerified(),
+                video.getVerifiedDate(),
                 video.getFake(),
                 video.getResponsePictureFileIds()
         );

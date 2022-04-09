@@ -31,9 +31,9 @@ public class PictureController {
     PictureService textService;
 
     @PostMapping()
-    public ResponseEntity<PictureResponse> upload(@RequestBody MultipartFile value) {
+    public ResponseEntity<PictureResponse> upload(@RequestBody MultipartFile file) {
         try {
-            return new ResponseEntity<>(textService.add(value), HttpStatus.CREATED);
+            return new ResponseEntity<>(textService.add(file), HttpStatus.CREATED);
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         } catch (EntityNotFoundException e) {
